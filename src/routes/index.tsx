@@ -1,24 +1,41 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { Atmosphere } from "@/components/background/Atmosphere";
+import { Countdown } from "@/components/countdown/Countdown";
+import { DEADLINE_LABEL } from "@/utils/countdown";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Day 052 — October 10, 2026" },
+      {
+        name: "description",
+        content:
+          "A quiet, continuously running countdown to October 10, 2026. No controls, no clutter — just the time that remains.",
+      },
+      { property: "og:title", content: "Day 052 — October 10, 2026" },
+      {
+        property: "og:description",
+        content: "A quiet, continuously running countdown to October 10, 2026.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <Atmosphere />
+      <main className="screen">
+        <header className="masthead">
+          <h1 className="masthead-eyebrow">Day 052</h1>
+          <p className="masthead-date">{DEADLINE_LABEL}</p>
+        </header>
+        <Countdown />
+      </main>
+    </>
   );
 }

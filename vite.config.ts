@@ -17,6 +17,8 @@ export default defineConfig({
         devOptions: { enabled: false },
         manifest: false,
         workbox: {
+          swDest: "dist/client/sw.js",
+          inlineWorkboxRuntime: true,
           globDirectory: "dist/client",
           globPatterns: ["**/*.{js,css,html,png,svg,webmanifest}"],
           navigateFallback: "/",

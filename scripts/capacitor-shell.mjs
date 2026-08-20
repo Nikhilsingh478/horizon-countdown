@@ -1,39 +1,53 @@
 /**
- * Capacitor needs a static entry document. This snapshots the rendered "/"
- * document from a local production preview server into dist/client/index.html
- * so the Android WebView (and the offline PWA shell) can boot the exact same
- * app without a server.
+ * Capacitor's WebView (and the offline PWA shell) needs a static entry
+ * document. The app is a client-rendered single screen, so a minimal shell
+ * that loads the built client entry is enough — the router mounts the
+ * countdown immediately, with no server involved.
  */
-import { spawn } from "node:child_process";
-import { writeFile } from "node:fs/promises";
+import { readdir, writeFile } from "node:fs/promises";
 
-const PORT = 4178;
-const URL_ = `http://127.0.0.1:${PORT}/`;
+const dir = "dist/client/assets";
+const files = await readdir(dir);
+const entry = files.find((f) => /^index-.*\.js$/.test(f));
+const css = files.find((f) => f.endsWith(".css"));
 
-const server = spawn("npx", ["vite", "preview", "--port", String(PORT), "--host", "127.0.0.1"], {
-  stdio: "ignore",
-  detached: false,
-});
+if (!entry || !css) throw new Error("could not locate built client entry assets");
 
-const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-
-let html = "";
-try {
-  for (let i = 0; i < 60; i++) {
-    try {
-      const res = await fetch(URL_);
-      if (res.ok) {
-        html = await res.text();
-        break;
+const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Day 052 — October 10, 2026</title>
+    <meta name="description" content="A quiet countdown to October 10, 2026." />
+    <meta name="theme-color" content="#08090B" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/assets/${css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #08090b;
+        color: #f2f2f0;
       }
-    } catch {
-      /* not up yet */
-    }
-    await wait(500);
-  }
-  if (!html) throw new Error("preview server did not respond");
-  await writeFile("dist/client/index.html", html);
-  console.log("wrote dist/client/index.html");
-} finally {
-  server.kill("SIGKILL");
-}
+    </style>
+  </head>
+  <body>
+    <script type="module" src="/assets/${entry}"></script>
+  </body>
+</html>
+`;
+
+await writeFile("dist/client/index.html", html);
+console.log(`wrote dist/client/index.html (entry: ${entry})`);

@@ -12,26 +12,26 @@ export function Atmosphere() {
   return (
     <div className="atmosphere" aria-hidden="true">
       <GradientWaves
-        horizonColor="#07090e"
-        waveColor="#151c2a"
-        crestColor="#323b4e"
+        horizonColor="#0b0e1a"
+        waveColor="#1e273a"
+        crestColor="#455577"
         speed={0.35}
-        amplitude={2.3}
-        waveScale={0.55}
+        amplitude={2.6}
+        waveScale={0.6}
         waveRatio={0.9}
-        swell={30}
-        turbulence={18}
+        swell={32}
+        turbulence={20}
         tilt={1.11}
         zoom={1.0}
         height={5.5}
-        fogDepth={15}
+        fogDepth={16}
         detail="medium"
-        brightness={1.15}
+        brightness={1.35}
         opacity={1.0}
         mouseInteraction={true}
-        parallaxStrength={0.35}
+        parallaxStrength={0.4}
         grain={true}
-        grainIntensity={0.035}
+        grainIntensity={0.03}
       />
       {/* Vignette overlay — keeps text readable without hiding the waves */}
       <div className="atmosphere-vignette" />

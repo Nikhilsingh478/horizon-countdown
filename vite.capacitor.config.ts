@@ -8,15 +8,14 @@ import { defineConfig } from "vite";
 // no SSR/router shell, output consumed via capacitor.config.ts -> webDir.
 export default defineConfig({
   base: "./",
+  root: resolve(import.meta.dirname, "capacitor"),
+  publicDir: resolve(import.meta.dirname, "public"),
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: { "@": resolve(import.meta.dirname, "src") },
   },
   build: {
-    outDir: "dist-android",
+    outDir: resolve(import.meta.dirname, "dist-android"),
     emptyOutDir: true,
-    rollupOptions: {
-      input: resolve(import.meta.dirname, "capacitor/index.html"),
-    },
   },
 });

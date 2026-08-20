@@ -1,26 +1,17 @@
 @import "tailwindcss" source(none);
 @source "../src";
-@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ * Design system tokens (required by Tailwind / shadcn components).
+ * The countdown surface uses its own plain CSS below — no Tailwind utilities
+ * are used for the core UI. This block is kept intact for any utility classes
+ * that may be used elsewhere (e.g. error pages).
  */
 
 @theme inline {
-  --font-editorial: "Cormorant Garamond", Georgia, serif;
-  --font-numeral: "Barlow Condensed", "Roboto Condensed", sans-serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -47,12 +38,6 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -65,73 +50,63 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.135 0.005 265);
+  --background: oklch(0.06 0.003 260);
   --foreground: oklch(0.955 0.002 90);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --card: oklch(0.10 0.003 260);
+  --card-foreground: oklch(0.955 0.002 90);
+  --popover: oklch(0.10 0.003 260);
+  --popover-foreground: oklch(0.955 0.002 90);
+  --primary: oklch(0.955 0.002 90);
+  --primary-foreground: oklch(0.06 0.003 260);
+  --secondary: oklch(0.18 0.005 260);
+  --secondary-foreground: oklch(0.955 0.002 90);
+  --muted: oklch(0.18 0.005 260);
+  --muted-foreground: oklch(0.55 0.01 260);
+  --accent: oklch(0.18 0.005 260);
+  --accent-foreground: oklch(0.955 0.002 90);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --destructive-foreground: oklch(0.955 0.002 90);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.5 0.01 260);
+  --sidebar: oklch(0.10 0.003 260);
+  --sidebar-foreground: oklch(0.955 0.002 90);
+  --sidebar-primary: oklch(0.955 0.002 90);
+  --sidebar-primary-foreground: oklch(0.06 0.003 260);
+  --sidebar-accent: oklch(0.18 0.005 260);
+  --sidebar-accent-foreground: oklch(0.955 0.002 90);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.5 0.01 260);
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
+  --background: oklch(0.06 0.003 260);
+  --foreground: oklch(0.955 0.002 90);
+  --card: oklch(0.10 0.003 260);
+  --card-foreground: oklch(0.955 0.002 90);
+  --popover: oklch(0.10 0.003 260);
+  --popover-foreground: oklch(0.955 0.002 90);
+  --primary: oklch(0.955 0.002 90);
+  --primary-foreground: oklch(0.06 0.003 260);
+  --secondary: oklch(0.18 0.005 260);
+  --secondary-foreground: oklch(0.955 0.002 90);
+  --muted: oklch(0.18 0.005 260);
+  --muted-foreground: oklch(0.55 0.01 260);
+  --accent: oklch(0.18 0.005 260);
+  --accent-foreground: oklch(0.955 0.002 90);
   --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --destructive-foreground: oklch(0.955 0.002 90);
   --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.5 0.01 260);
+  --sidebar: oklch(0.10 0.003 260);
+  --sidebar-foreground: oklch(0.955 0.002 90);
+  --sidebar-primary: oklch(0.955 0.002 90);
+  --sidebar-primary-foreground: oklch(0.06 0.003 260);
+  --sidebar-accent: oklch(0.18 0.005 260);
+  --sidebar-accent-foreground: oklch(0.955 0.002 90);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --sidebar-ring: oklch(0.5 0.01 260);
 }
 
 @layer base {
@@ -145,29 +120,50 @@
   }
 }
 
-/* ============================================================
-   Day 052 — countdown surface
-   ============================================================ */
+/* ================================================================
+   Day 052 — Countdown Surface
+   All custom properties for the countdown are defined here.
+   Manrope is used exclusively — no other font family anywhere.
+   ================================================================ */
 
 :root {
-  --ink: #08090b;
-  --ink-raised: #0e1013;
-  --text-primary: #f2f2f0;
-  --text-secondary: #8d9098;
-  --text-muted: #555861;
-  --accent-deep: #263a73;
-  --accent-violet: #3949ab;
-  --accent-indigo: #5146a8;
+  --ink: #06070a;
+  --text-primary: #ededeb;
+  --text-secondary: #7a7e89;
+  --text-muted: #454850;
+
+  /* Scoreboard roll duration */
+  --roll-duration: 240ms;
+  /* Flip calendar duration */
+  --flip-duration: 460ms;
+}
+
+/* ----------------------------------------------------------------
+   Global reset / base
+   ---------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
 body {
+  margin: 0;
+  padding: 0;
   background-color: var(--ink);
   color: var(--text-primary);
+  font-family: "Manrope", system-ui, sans-serif;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* ---------- atmosphere ---------- */
+/* ----------------------------------------------------------------
+   Background atmosphere container
+   The GradientWaves canvas lives inside .atmosphere;
+   .atmosphere-vignette sits on top to darken edges.
+   ---------------------------------------------------------------- */
 
 .atmosphere {
   position: fixed;
@@ -177,64 +173,26 @@ body {
   background: var(--ink);
 }
 
-.atmosphere-glow {
+/* The GradientWaves component mounts a <canvas> that fills the container */
+.atmosphere > div {
   position: absolute;
-  inset: -20% -10% 0 -10%;
-  background: radial-gradient(
-    60% 45% at 50% 18%,
-    color-mix(in oklab, var(--accent-deep) 26%, transparent),
-    transparent 70%
-  );
-  opacity: 0.55;
-}
-
-.atmosphere-wave {
-  position: absolute;
-  left: -25%;
-  right: -25%;
-  bottom: -30vh;
-  height: 90vh;
-  background:
-    radial-gradient(
-      50% 50% at 30% 60%,
-      color-mix(in oklab, var(--accent-indigo) 22%, transparent),
-      transparent 72%
-    ),
-    radial-gradient(
-      45% 45% at 72% 75%,
-      color-mix(in oklab, var(--accent-violet) 18%, transparent),
-      transparent 70%
-    );
-  filter: blur(30px);
-  opacity: 0.45;
-  animation: swell 34s ease-in-out infinite alternate;
-}
-
-@keyframes swell {
-  from {
-    transform: translate3d(-2%, 2%, 0) scale(1);
-  }
-  to {
-    transform: translate3d(3%, -3%, 0) scale(1.08);
-  }
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .atmosphere-vignette {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background:
-    radial-gradient(75% 60% at 50% 45%, transparent, rgba(5, 6, 8, 0.72) 100%),
-    linear-gradient(to bottom, rgba(5, 6, 8, 0.45), transparent 30%, rgba(5, 6, 8, 0.35));
+    radial-gradient(80% 65% at 50% 48%, transparent, rgba(4, 5, 8, 0.68) 100%),
+    linear-gradient(to bottom, rgba(4, 5, 8, 0.55), transparent 28%, rgba(4, 5, 8, 0.42));
 }
 
-.atmosphere-grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* ---------- shell ---------- */
+/* ----------------------------------------------------------------
+   Screen shell — centres the content vertically + horizontally
+   ---------------------------------------------------------------- */
 
 .screen {
   position: relative;
@@ -244,16 +202,18 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(2rem, 6vh, 4.25rem);
-  padding: calc(env(safe-area-inset-top) + 2.5rem) 1.25rem
-    calc(env(safe-area-inset-bottom) + 2.5rem);
-  animation: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  gap: clamp(2rem, 5.5vh, 4rem);
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 2.5rem)
+    clamp(1rem, 4vw, 2rem)
+    calc(env(safe-area-inset-bottom, 0px) + 2.5rem);
+  animation: screen-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-@keyframes rise {
+@keyframes screen-rise {
   from {
     opacity: 0;
-    transform: translate3d(0, 10px, 0);
+    transform: translate3d(0, 12px, 0);
   }
   to {
     opacity: 1;
@@ -261,104 +221,119 @@ body {
   }
 }
 
+/* ----------------------------------------------------------------
+   Masthead — DAY 052 + date heading
+   ---------------------------------------------------------------- */
+
 .masthead {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .masthead-eyebrow {
-  display: block;
-  font-family: var(--font-numeral);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: clamp(0.625rem, 1.4vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--text-muted);
+  line-height: 1;
 }
 
 .masthead-date {
-  display: block;
-  margin-top: 0.85rem;
-  font-family: var(--font-editorial);
-  font-weight: 500;
-  font-size: clamp(1.25rem, 3.4vw, 1.9rem);
-  letter-spacing: 0.14em;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: clamp(1.1rem, 2.8vw, 1.65rem);
+  font-weight: 300;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-secondary);
+  line-height: 1;
 }
 
-/* ---------- countdown ---------- */
+/* ----------------------------------------------------------------
+   Countdown row — ALL FOUR units on ONE horizontal line always.
+   flex-nowrap enforced. Shrinks gracefully on narrow screens via
+   clamp() values on font-size and gap.
+   ---------------------------------------------------------------- */
 
 .countdown-row {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: center;
-  gap: clamp(0.5rem, 1.6vw, 1.25rem);
-  flex-wrap: wrap;
+  gap: clamp(0.85rem, 2.8vw, 2.25rem);
+  width: 100%;
 }
+
+/* ----------------------------------------------------------------
+   Individual countdown unit (number + label stacked)
+   ---------------------------------------------------------------- */
 
 .unit {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.85rem;
-}
-
-.unit-panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: clamp(4.5rem, 15vw, 8.5rem);
-  padding: clamp(0.5rem, 1.6vw, 1rem) clamp(0.75rem, 2vw, 1.5rem);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 12px 30px -24px rgba(0, 0, 0, 0.9);
+  gap: 0.7rem;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .unit-label {
-  font-family: var(--font-numeral);
-  font-size: clamp(0.625rem, 1.4vw, 0.75rem);
-  font-weight: 500;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: clamp(0.5rem, 1.15vw, 0.65rem);
+  font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
+/* Thin colon divider between units */
 .unit-divider {
   align-self: center;
-  margin-top: -1.4rem;
-  font-family: var(--font-numeral);
-  font-size: clamp(1.5rem, 4vw, 2.75rem);
-  color: rgba(141, 144, 152, 0.28);
+  padding-bottom: 1.5rem; /* visually centres with the number */
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: clamp(1.2rem, 3.2vw, 2.25rem);
+  font-weight: 200;
+  color: rgba(120, 124, 135, 0.22);
+  flex-shrink: 0;
+  line-height: 1;
 }
 
-/* ---------- numerals + animation ---------- */
+/* ----------------------------------------------------------------
+   Number display — shared base
+   ---------------------------------------------------------------- */
 
 .flip-face {
   display: block;
-  font-family: var(--font-numeral);
-  font-weight: 500;
-  font-size: clamp(3rem, 9vw, 6.5rem);
+  font-family: "Manrope", system-ui, sans-serif;
+  font-weight: 200;
+  font-size: clamp(2.6rem, 7.5vw, 5.5rem);
   line-height: 1;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
-.flip-stage,
-.roll-stage {
+/* ----------------------------------------------------------------
+   FLIP CALENDAR — Days / Hours / Minutes
+   Split-flap: top half of old value folds away, bottom half of new
+   value unfolds in. The static .flip-face is always the base layer.
+   ---------------------------------------------------------------- */
+
+.flip-stage {
   position: relative;
   display: block;
-  perspective: 420px;
+  perspective: 500px;
 }
 
-.roll-stage {
-  overflow: hidden;
-}
-
+/* Top-half overlay: old value, folds away from centre */
 .flip-half {
   position: absolute;
   inset: 0;
@@ -369,15 +344,13 @@ body {
 .flip-half--top {
   clip-path: inset(0 0 50% 0);
   transform-origin: center bottom;
-  animation: flip-top 460ms cubic-bezier(0.42, 0, 0.35, 1) both;
-  background: var(--ink);
+  animation: flip-top var(--flip-duration) cubic-bezier(0.42, 0, 0.35, 1) both;
 }
 
 .flip-half--bottom {
   clip-path: inset(50% 0 0 0);
   transform-origin: center top;
-  animation: flip-bottom 460ms cubic-bezier(0.42, 0, 0.35, 1) both;
-  background: var(--ink);
+  animation: flip-bottom var(--flip-duration) cubic-bezier(0.42, 0, 0.35, 1) both;
 }
 
 @keyframes flip-top {
@@ -387,14 +360,14 @@ body {
   }
   to {
     transform: rotateX(-90deg);
-    filter: brightness(0.45);
+    filter: brightness(0.4);
   }
 }
 
 @keyframes flip-bottom {
   from {
     transform: rotateX(90deg);
-    filter: brightness(0.45);
+    filter: brightness(0.4);
   }
   to {
     transform: rotateX(0deg);
@@ -402,82 +375,146 @@ body {
   }
 }
 
-.roll-out,
-.roll-in {
+/* ----------------------------------------------------------------
+   SCOREBOARD ROLL — Seconds
+   Two independent per-digit slot windows. Each slot is a clipped
+   viewport with overflow:hidden. Old digit exits UP, new digit
+   enters FROM BELOW. No opacity, no scale, no 3D.
+   ---------------------------------------------------------------- */
+
+.scoreboard-number {
+  display: inline-flex;
+  gap: 0;
+  /* Horizontally centres the two-digit pair the same as flip-face */
+}
+
+/* One digit slot = a clipped viewport exactly one character wide */
+.digit-slot {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  /* Height anchored to the number's line-height so the clip is tight */
+  height: 1em;
+  line-height: 1;
+}
+
+/* Static digit (no animation happening) */
+.digit-static {
+  display: block;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-weight: 200;
+  font-size: clamp(2.6rem, 7.5vw, 5.5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: var(--text-primary);
+}
+
+/* Outgoing digit: slides straight UP out of the clipped window */
+.digit-out {
   position: absolute;
   inset: 0;
+  display: block;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-weight: 200;
+  font-size: clamp(2.6rem, 7.5vw, 5.5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: var(--text-primary);
+  animation: digit-exit var(--roll-duration) cubic-bezier(0.4, 0, 0.6, 1) both;
 }
 
-.roll-out {
-  animation: roll-out 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
+/* Incoming digit: enters from BELOW, scrolls into position */
+.digit-in {
+  position: absolute;
+  inset: 0;
+  display: block;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-weight: 200;
+  font-size: clamp(2.6rem, 7.5vw, 5.5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: var(--text-primary);
+  animation: digit-enter var(--roll-duration) cubic-bezier(0.4, 0, 0.6, 1) both;
 }
 
-.roll-in {
-  animation: roll-in 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
+@keyframes digit-exit {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
 }
 
-@keyframes roll-out {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
+@keyframes digit-enter {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
 }
 
-@keyframes roll-in {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
+/* ----------------------------------------------------------------
+   MOBILE — keep all 4 units on ONE row at ≤ 480px
+   Shrink numbers and gaps aggressively to fit 320px wide screens.
+   ---------------------------------------------------------------- */
 
-/* ---------- mobile ---------- */
-
-@media (max-width: 560px) {
+@media (max-width: 480px) {
   .countdown-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem 0.75rem;
-    max-width: 22rem;
+    gap: clamp(0.35rem, 2.5vw, 0.75rem);
+  }
+
+  .flip-face,
+  .digit-static,
+  .digit-out,
+  .digit-in {
+    font-size: clamp(1.75rem, 11.5vw, 2.4rem);
+  }
+
+  .unit-label {
+    font-size: clamp(0.42rem, 2vw, 0.58rem);
+    letter-spacing: 0.14em;
   }
 
   .unit-divider {
-    display: none;
+    font-size: clamp(0.9rem, 4vw, 1.3rem);
+    padding-bottom: 1rem;
   }
 
-  .unit-panel {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .flip-face {
-    font-size: clamp(2.75rem, 15vw, 4rem);
+  .masthead-date {
+    font-size: clamp(0.85rem, 5vw, 1.15rem);
+    letter-spacing: 0.12em;
   }
 
   .masthead-eyebrow {
-    font-size: 0.6875rem;
+    font-size: clamp(0.55rem, 2.2vw, 0.65rem);
+  }
+
+  .unit {
+    gap: 0.45rem;
   }
 }
 
+/* ----------------------------------------------------------------
+   Reduced motion — disable all animations
+   ---------------------------------------------------------------- */
+
 @media (prefers-reduced-motion: reduce) {
-  .screen,
-  .atmosphere-wave,
-  .flip-half--top,
-  .flip-half--bottom,
-  .roll-out,
-  .roll-in {
+  .screen {
     animation: none !important;
   }
 
-  .flip-half,
-  .roll-out {
+  .flip-half--top,
+  .flip-half--bottom {
+    animation: none !important;
+  }
+
+  .digit-out,
+  .digit-in {
+    animation: none !important;
+  }
+
+  .flip-half {
+    display: none;
+  }
+
+  .digit-out {
     display: none;
   }
 }

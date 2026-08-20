@@ -1,48 +1,80 @@
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
-  value: string;
+  value: string; // always a 2-char padded string, e.g. "07"
+  reducedMotion: boolean;
+};
+
+type DigitSlotProps = {
+  digit: string;
   reducedMotion: boolean;
 };
 
 /**
- * Cricket-scoreboard roll: the outgoing value slides up out of the window
- * while the incoming value rolls in from below. Quick, crisp, no bounce.
+ * A single digit slot with a clipped overflow window.
+ * When the digit changes, the outgoing digit slides UP out of view
+ * (translateY 0 → -100%) while the incoming digit rolls in FROM BELOW
+ * (translateY 100% → 0). No fade, no scale, no 3D.
  */
-export function ScoreboardNumber({ value, reducedMotion }: Props) {
-  const [current, setCurrent] = useState(value);
+function DigitSlot({ digit, reducedMotion }: DigitSlotProps) {
+  const [current, setCurrent] = useState(digit);
   const [previous, setPrevious] = useState<string | null>(null);
   const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
-    if (value === current) return;
+    if (digit === current) return;
+
     if (reducedMotion) {
-      setCurrent(value);
+      setCurrent(digit);
       setPrevious(null);
       return;
     }
-    setPrevious(current);
-    setCurrent(value);
-    if (timeout.current) clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => setPrevious(null), 300);
-  }, [value, current, reducedMotion]);
 
-  useEffect(() => () => timeout.current && clearTimeout(timeout.current), []);
+    setPrevious(current);
+    setCurrent(digit);
+
+    if (timeout.current) clearTimeout(timeout.current);
+    // Duration must match --roll-duration CSS variable (240ms)
+    timeout.current = setTimeout(() => setPrevious(null), 260);
+  }, [digit, current, reducedMotion]);
+
+  useEffect(() => () => { if (timeout.current) clearTimeout(timeout.current); }, []);
 
   return (
-    <span className="roll-stage">
+    <span className="digit-slot">
       {previous !== null ? (
         <>
-          <span className="roll-out" key={`o-${previous}`}>
-            <span className="flip-face">{previous}</span>
+          {/* Outgoing digit: slides up and out */}
+          <span className="digit-out" key={`out-${previous}-${current}`}>
+            {previous}
           </span>
-          <span className="roll-in" key={`i-${current}`}>
-            <span className="flip-face">{current}</span>
+          {/* Incoming digit: enters from below */}
+          <span className="digit-in" key={`in-${current}`}>
+            {current}
           </span>
         </>
       ) : (
-        <span className="flip-face">{current}</span>
+        <span className="digit-static">{current}</span>
       )}
+    </span>
+  );
+}
+
+/**
+ * Scoreboard roll for seconds — treats the two-character string as
+ * two INDEPENDENT digit slots so only the digits that actually changed roll.
+ *
+ * "07" → "08": only the right slot rolls.
+ * "09" → "10": both slots roll.
+ */
+export function ScoreboardNumber({ value, reducedMotion }: Props) {
+  const tens = value[0] ?? "0";
+  const ones = value[1] ?? "0";
+
+  return (
+    <span className="scoreboard-number">
+      <DigitSlot digit={tens} reducedMotion={reducedMotion} />
+      <DigitSlot digit={ones} reducedMotion={reducedMotion} />
     </span>
   );
 }

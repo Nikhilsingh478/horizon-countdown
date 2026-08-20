@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Near-black background -->
+  <rect width="32" height="32" rx="5" fill="#06070A"/>
+
+  <!-- Dandiya stick 1: top-left to bottom-right (warm gold) -->
+  <!-- Shaft -->
+  <line x1="7" y1="7" x2="25" y2="25" stroke="#C8860A" stroke-width="2.8" stroke-linecap="round"/>
+  <!-- Knob top-left -->
+  <circle cx="6.5" cy="6.5" r="2.2" fill="#C8860A"/>
+  <!-- Knob bottom-right -->
+  <circle cx="25.5" cy="25.5" r="2.2" fill="#C8860A"/>
+
+  <!-- Dandiya stick 2: top-right to bottom-left (slightly lighter gold) -->
+  <!-- Shaft -->
+  <line x1="25" y1="7" x2="7" y2="25" stroke="#D4943A" stroke-width="2.8" stroke-linecap="round"/>
+  <!-- Knob top-right -->
+  <circle cx="25.5" cy="6.5" r="2.2" fill="#D4943A"/>
+  <!-- Knob bottom-left -->
+  <circle cx="6.5" cy="25.5" r="2.2" fill="#D4943A"/>
+</svg>

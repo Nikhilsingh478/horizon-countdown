@@ -311,14 +311,17 @@ body {
 
 /* ----------------------------------------------------------------
    PHYSICAL FLIP CALENDAR — Days / Hours / Minutes
-   Realistic 3D split-flap calendar flip with staggered top/bottom
-   card drop, dynamic lighting shadows, and center hinge seam.
+   Full-card calendar page flip, pivot pinned at TOP edge.
+   Old card: bottom lifts UP (rotateX 0 → -90) — bottom-to-top motion.
+   New card: swings DOWN from behind (rotateX 90 → 0) — full height.
    ---------------------------------------------------------------- */
 
 .flip-card {
   position: relative;
   display: inline-block;
-  perspective: 450px;
+  /* perspective applied here so children share the same 3D space */
+  perspective: 600px;
+  perspective-origin: center top;
   line-height: 1.2;
   vertical-align: top;
   user-select: none;
@@ -339,42 +342,7 @@ body {
   pointer-events: none;
 }
 
-/* Common styling for static panels and animating flaps */
-.flip-panel,
-.flip-flap {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  backface-visibility: hidden;
-}
-
-/* Static Backdrop Panels */
-.flip-panel--top {
-  clip-path: inset(0 0 50% 0);
-  z-index: 1;
-}
-
-.flip-panel--bottom {
-  clip-path: inset(50% 0 0 0);
-  z-index: 1;
-}
-
-/* Animating Flaps */
-.flip-flap--top {
-  clip-path: inset(0 0 50% 0);
-  transform-origin: center center;
-  animation: flip-fold-top 540ms cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
-  z-index: 3;
-}
-
-.flip-flap--bottom {
-  clip-path: inset(50% 0 0 0);
-  transform-origin: center center;
-  animation: flip-unfold-bottom 540ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
-  z-index: 2;
-}
-
-/* Digit typography */
+/* Digit typography — shared by all faces */
 .flip-digit {
   display: block;
   font-family: "Manrope", system-ui, sans-serif;
@@ -390,88 +358,58 @@ body {
   text-align: center;
 }
 
-/* Horizontal Hinge Seam Line */
-.flip-hinge {
-  position: absolute;
-  left: -1px;
-  right: -1px;
-  top: 50%;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.5);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
-  z-index: 10;
-  pointer-events: none;
-}
-
-/* Lighting shadow overlays */
-.flip-shadow {
+/* Full-height card face — covers the entire card area */
+.flip-face {
   position: absolute;
   inset: 0;
-  pointer-events: none;
+  overflow: hidden;
+  /* Pivot is pinned at TOP edge so the bottom lifts upward */
+  transform-origin: top center;
+  backface-visibility: hidden;
 }
 
-.flip-shadow--top {
-  clip-path: inset(0 0 50% 0);
-  animation: shadow-fold 540ms ease-in forwards;
+/* Idle — no animation, just display current value */
+.flip-face--idle {
+  z-index: 1;
 }
 
-.flip-shadow--bottom {
-  clip-path: inset(50% 0 0 0);
-  animation: shadow-unfold 540ms ease-out forwards;
+/* OLD card: lifts from bottom upward (bottom-to-top) — exits at -90deg */
+.flip-face--out {
+  z-index: 3;
+  animation: flip-page-out 280ms cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
 }
 
-/* Keyframe animations */
-@keyframes flip-fold-top {
+/* NEW card: swings down from behind — enters from -90deg to 0 */
+.flip-face--in {
+  z-index: 2;
+  animation: flip-page-in 560ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+
+/* OLD card folds UPWARD: bottom lifts toward viewer, then disappears behind */
+@keyframes flip-page-out {
   0% {
     transform: rotateX(0deg);
     filter: brightness(1);
   }
-  50% {
-    transform: rotateX(-90deg);
-    filter: brightness(0.35);
-  }
   100% {
     transform: rotateX(-90deg);
-    filter: brightness(0.35);
+    filter: brightness(0.3);
   }
 }
 
-@keyframes flip-unfold-bottom {
+/* NEW card swings DOWN from 90deg (behind/above) into flat 0deg position */
+@keyframes flip-page-in {
   0% {
     transform: rotateX(90deg);
-    filter: brightness(0.35);
+    filter: brightness(0.3);
   }
   50% {
     transform: rotateX(90deg);
-    filter: brightness(0.35);
+    filter: brightness(0.3);
   }
   100% {
     transform: rotateX(0deg);
     filter: brightness(1);
-  }
-}
-
-@keyframes shadow-fold {
-  0% {
-    background: transparent;
-  }
-  50% {
-    background: rgba(0, 0, 0, 0.55);
-  }
-  100% {
-    background: rgba(0, 0, 0, 0.55);
-  }
-}
-
-@keyframes shadow-unfold {
-  0% {
-    background: rgba(0, 0, 0, 0.65);
-  }
-  50% {
-    background: rgba(0, 0, 0, 0.65);
-  }
-  100% {
-    background: transparent;
   }
 }
 

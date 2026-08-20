@@ -6,14 +6,14 @@ type Props = {
 };
 
 /**
-  * Physical split-flap calendar flip for DAYS / HOURS / MINUTES.
-  *
-  * Mimics a real-world physical flip calendar:
-  *   1. Static backdrop: Top half shows NEW digit, Bottom half shows OLD digit.
-  *   2. Phase 1 (0% -> 50%): Top flap (OLD digit) folds DOWN from 0° -> -90°.
-  *   3. Phase 2 (50% -> 100%): Bottom flap (NEW digit) unfolds DOWN from 90° -> 0°.
-  *   4. Hinge seam line across the middle for authentic mechanical aesthetic.
-  */
+ * Physical calendar page flip for DAYS / HOURS / MINUTES.
+ *
+ * Mimics a real desk/wall flip calendar:
+ *   - The card is pinned at the TOP edge (transform-origin: top center).
+ *   - Old card: lifts from the bottom UPWARD → rotateX(0 → -90deg).
+ *   - New card: swings down from behind → rotateX(90deg → 0).
+ *   - Full-card flip — no split at 50%.
+ */
 export function FlipNumber({ value, reducedMotion }: Props) {
   const [current, setCurrent] = useState(value);
   const [previous, setPrevious] = useState<string | null>(null);
@@ -32,7 +32,7 @@ export function FlipNumber({ value, reducedMotion }: Props) {
     setCurrent(value);
 
     if (timeout.current) clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => setPrevious(null), 540);
+    timeout.current = setTimeout(() => setPrevious(null), 560);
   }, [value, current, reducedMotion]);
 
   useEffect(() => () => { if (timeout.current) clearTimeout(timeout.current); }, []);
@@ -41,48 +41,37 @@ export function FlipNumber({ value, reducedMotion }: Props) {
 
   return (
     <span className="flip-card">
-      {/* In-flow sizer to guarantee exact box width and height */}
+      {/* In-flow sizer — locks the card's width/height */}
       <span className="flip-sizer" aria-hidden="true">
         {current}
       </span>
 
-      {isFlipping ? (
+      {/* Resting state: just show the current value */}
+      {!isFlipping && (
+        <span className="flip-face flip-face--idle">
+          <span className="flip-digit">{current}</span>
+        </span>
+      )}
+
+      {isFlipping && (
         <>
-          {/* STATIC BACKDROP: Top = NEW digit, Bottom = OLD digit */}
-          <span className="flip-panel flip-panel--top">
-            <span className="flip-digit">{current}</span>
-          </span>
-          <span className="flip-panel flip-panel--bottom">
+          {/* OLD card — full height — folds UPWARD from bottom, pivot at top */}
+          <span
+            className="flip-face flip-face--out"
+            key={`out-${previous}-${current}`}
+          >
             <span className="flip-digit">{previous}</span>
           </span>
 
-          {/* ANIMATING FLAPS */}
-          {/* Top flap folds down 0deg -> -90deg */}
-          <span className="flip-flap flip-flap--top" key={`top-${previous}-${current}`}>
-            <span className="flip-digit">{previous}</span>
-            <span className="flip-shadow flip-shadow--top" />
-          </span>
-
-          {/* Bottom flap unfolds down 90deg -> 0deg */}
-          <span className="flip-flap flip-flap--bottom" key={`bot-${previous}-${current}`}>
-            <span className="flip-digit">{current}</span>
-            <span className="flip-shadow flip-shadow--bottom" />
-          </span>
-        </>
-      ) : (
-        /* IDLE STATE: Both halves show current value */
-        <>
-          <span className="flip-panel flip-panel--top">
-            <span className="flip-digit">{current}</span>
-          </span>
-          <span className="flip-panel flip-panel--bottom">
+          {/* NEW card — full height — swings DOWN from behind, pivot at top */}
+          <span
+            className="flip-face flip-face--in"
+            key={`in-${previous}-${current}`}
+          >
             <span className="flip-digit">{current}</span>
           </span>
         </>
       )}
-
-      {/* Horizontal Seam Hinge Line */}
-      <span className="flip-hinge" aria-hidden="true" />
     </span>
   );
 }

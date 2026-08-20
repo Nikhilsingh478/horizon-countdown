@@ -12,11 +12,11 @@ export function Atmosphere() {
   return (
     <div className="atmosphere" aria-hidden="true">
       <GradientWaves
-        horizonColor="#0b0e1a"
-        waveColor="#1e273a"
-        crestColor="#455577"
+        horizonColor="#141828"
+        waveColor="#2d3d5c"
+        crestColor="#6b82b0"
         speed={0.35}
-        amplitude={2.6}
+        amplitude={2.8}
         waveScale={0.6}
         waveRatio={0.9}
         swell={32}
@@ -24,9 +24,9 @@ export function Atmosphere() {
         tilt={1.11}
         zoom={1.0}
         height={5.5}
-        fogDepth={16}
+        fogDepth={14}
         detail="medium"
-        brightness={1.35}
+        brightness={1.6}
         opacity={1.0}
         mouseInteraction={true}
         parallaxStrength={0.4}

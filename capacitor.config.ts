@@ -3,7 +3,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 const config: CapacitorConfig = {
   appId: "app.day052.countdown",
   appName: "Day 052",
-  webDir: "dist/client",
+  webDir: "dist-android",
   android: {
     backgroundColor: "#08090B",
   },

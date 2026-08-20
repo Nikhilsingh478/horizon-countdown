@@ -6,15 +6,14 @@ type Props = {
 };
 
 /**
- * Mechanical split-flap calendar flip for DAYS / HOURS / MINUTES.
- *
- * Structure:
- *   - Static base shows the current value (always visible, no animation).
- *   - When value changes, two absolutely-positioned overlays animate:
- *       • Top overlay (previous value, top half): folds away from centre — rotateX(0) → rotateX(-90deg)
- *       • Bottom overlay (new value, bottom half): unfolds into view    — rotateX(90deg) → rotateX(0)
- *   - Overlays are removed after animation completes (~480ms).
- */
+  * Physical split-flap calendar flip for DAYS / HOURS / MINUTES.
+  *
+  * Mimics a real-world physical flip calendar:
+  *   1. Static backdrop: Top half shows NEW digit, Bottom half shows OLD digit.
+  *   2. Phase 1 (0% -> 50%): Top flap (OLD digit) folds DOWN from 0° -> -90°.
+  *   3. Phase 2 (50% -> 100%): Bottom flap (NEW digit) unfolds DOWN from 90° -> 0°.
+  *   4. Hinge seam line across the middle for authentic mechanical aesthetic.
+  */
 export function FlipNumber({ value, reducedMotion }: Props) {
   const [current, setCurrent] = useState(value);
   const [previous, setPrevious] = useState<string | null>(null);
@@ -33,28 +32,57 @@ export function FlipNumber({ value, reducedMotion }: Props) {
     setCurrent(value);
 
     if (timeout.current) clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => setPrevious(null), 500);
+    timeout.current = setTimeout(() => setPrevious(null), 540);
   }, [value, current, reducedMotion]);
 
   useEffect(() => () => { if (timeout.current) clearTimeout(timeout.current); }, []);
 
-  return (
-    <span className="flip-stage">
-      {/* Static base — always shows current value */}
-      <span className="flip-face">{current}</span>
+  const isFlipping = previous !== null;
 
-      {previous !== null && (
+  return (
+    <span className="flip-card">
+      {/* In-flow sizer to guarantee exact box width and height */}
+      <span className="flip-sizer" aria-hidden="true">
+        {current}
+      </span>
+
+      {isFlipping ? (
         <>
-          {/* Top half of old value folds away */}
-          <span className="flip-half flip-half--top" key={`t-${previous}-${current}`}>
-            <span className="flip-face">{previous}</span>
+          {/* STATIC BACKDROP: Top = NEW digit, Bottom = OLD digit */}
+          <span className="flip-panel flip-panel--top">
+            <span className="flip-digit">{current}</span>
           </span>
-          {/* Bottom half of new value unfolds in */}
-          <span className="flip-half flip-half--bottom" key={`b-${current}`}>
-            <span className="flip-face">{current}</span>
+          <span className="flip-panel flip-panel--bottom">
+            <span className="flip-digit">{previous}</span>
+          </span>
+
+          {/* ANIMATING FLAPS */}
+          {/* Top flap folds down 0deg -> -90deg */}
+          <span className="flip-flap flip-flap--top" key={`top-${previous}-${current}`}>
+            <span className="flip-digit">{previous}</span>
+            <span className="flip-shadow flip-shadow--top" />
+          </span>
+
+          {/* Bottom flap unfolds down 90deg -> 0deg */}
+          <span className="flip-flap flip-flap--bottom" key={`bot-${previous}-${current}`}>
+            <span className="flip-digit">{current}</span>
+            <span className="flip-shadow flip-shadow--bottom" />
+          </span>
+        </>
+      ) : (
+        /* IDLE STATE: Both halves show current value */
+        <>
+          <span className="flip-panel flip-panel--top">
+            <span className="flip-digit">{current}</span>
+          </span>
+          <span className="flip-panel flip-panel--bottom">
+            <span className="flip-digit">{current}</span>
           </span>
         </>
       )}
+
+      {/* Horizontal Seam Hinge Line */}
+      <span className="flip-hinge" aria-hidden="true" />
     </span>
   );
 }

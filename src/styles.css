@@ -314,7 +314,8 @@ body {
   font-family: "Manrope", system-ui, sans-serif;
   font-weight: 200;
   font-size: clamp(2.6rem, 7.5vw, 5.5rem);
-  line-height: 1;
+  line-height: 1.2;
+  padding: 0.06em 0;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
@@ -394,17 +395,18 @@ body {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  line-height: 1;
+  line-height: 1.2;
   vertical-align: top;
 }
 
-/* In-flow invisible digit sizer: anchors slot width and height */
+/* In-flow invisible digit sizer: anchors slot width and height comfortably */
 .digit-sizer {
   display: block;
   font-family: "Manrope", system-ui, sans-serif;
   font-weight: 200;
   font-size: clamp(2.6rem, 7.5vw, 5.5rem);
-  line-height: 1;
+  line-height: 1.2;
+  padding: 0.06em 0;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
   visibility: hidden;
@@ -416,13 +418,13 @@ body {
 .digit-static {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  text-align: center;
   font-family: "Manrope", system-ui, sans-serif;
   font-weight: 200;
   font-size: clamp(2.6rem, 7.5vw, 5.5rem);
-  line-height: 1;
+  line-height: 1.2;
+  padding: 0.06em 0;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
   color: var(--text-primary);
@@ -432,13 +434,13 @@ body {
 .digit-out {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  text-align: center;
   font-family: "Manrope", system-ui, sans-serif;
   font-weight: 200;
   font-size: clamp(2.6rem, 7.5vw, 5.5rem);
-  line-height: 1;
+  line-height: 1.2;
+  padding: 0.06em 0;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
   color: var(--text-primary);
@@ -449,13 +451,13 @@ body {
 .digit-in {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  text-align: center;
   font-family: "Manrope", system-ui, sans-serif;
   font-weight: 200;
   font-size: clamp(2.6rem, 7.5vw, 5.5rem);
-  line-height: 1;
+  line-height: 1.2;
+  padding: 0.06em 0;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
   color: var(--text-primary);

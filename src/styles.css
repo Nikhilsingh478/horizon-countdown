@@ -393,14 +393,31 @@ body {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  /* Height anchored to the number's line-height so the clip is tight */
-  height: 1em;
   line-height: 1;
+  vertical-align: top;
+}
+
+/* In-flow invisible digit sizer: anchors slot width and height */
+.digit-sizer {
+  display: block;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-weight: 200;
+  font-size: clamp(2.6rem, 7.5vw, 5.5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Static digit (no animation happening) */
 .digit-static {
-  display: block;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: "Manrope", system-ui, sans-serif;
   font-weight: 200;
   font-size: clamp(2.6rem, 7.5vw, 5.5rem);
@@ -414,7 +431,9 @@ body {
 .digit-out {
   position: absolute;
   inset: 0;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: "Manrope", system-ui, sans-serif;
   font-weight: 200;
   font-size: clamp(2.6rem, 7.5vw, 5.5rem);
@@ -429,7 +448,9 @@ body {
 .digit-in {
   position: absolute;
   inset: 0;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: "Manrope", system-ui, sans-serif;
   font-weight: 200;
   font-size: clamp(2.6rem, 7.5vw, 5.5rem);
@@ -461,6 +482,7 @@ body {
   }
 
   .flip-face,
+  .digit-sizer,
   .digit-static,
   .digit-out,
   .digit-in {

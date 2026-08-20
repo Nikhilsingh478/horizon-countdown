@@ -8,9 +8,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  nitro: {
-    preset: process.env.VERCEL ? "vercel" : undefined,
-  },
+  ...(process.env["VERCEL"] ? { nitro: { preset: "vercel" } } : {}),
   vite: {
     plugins: [
       VitePWA({
@@ -20,9 +18,9 @@ export default defineConfig({
         devOptions: { enabled: false },
         manifest: false,
         workbox: {
-          swDest: "dist/client/sw.js",
+          swDest: ".output/public/sw.js",
           inlineWorkboxRuntime: true,
-          globDirectory: "dist/client",
+          globDirectory: ".output/public",
           globPatterns: ["**/*.{js,css,html,png,svg,webmanifest}"],
           navigateFallback: "/",
           navigateFallbackDenylist: [/^\/~oauth/, /^\/api\//],

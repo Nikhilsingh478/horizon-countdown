@@ -42,6 +42,11 @@ function DigitSlot({ digit, reducedMotion }: DigitSlotProps) {
 
   return (
     <span className="digit-slot">
+      {/* In-flow sizer: anchors width and height so container never collapses */}
+      <span className="digit-sizer" aria-hidden="true">
+        {current}
+      </span>
+
       {previous !== null ? (
         <>
           {/* Outgoing digit: slides up and out */}

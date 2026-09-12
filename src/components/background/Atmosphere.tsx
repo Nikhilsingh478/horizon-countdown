@@ -1,39 +1,84 @@
-import GradientWaves from "./GradientWaves";
+import { useEffect, useRef, useState } from "react";
+
+const TOTAL_IMAGES = 20;
+const INTERVAL_MS = 2000; // 2 seconds per image
+const EXTENSIONS = ["jpg", "jpeg", "png", "webp"] as const;
 
 /**
- * Full-screen WebGL GradientWaves background in a near-black/charcoal palette.
- * A subtle radial vignette sits on top to keep the countdown legible and
- * prevent bright wave crests from competing with the text.
- *
- * On touch devices the component automatically reduces raymarch steps and
- * disables mouse parallax for battery / GPU friendliness.
+ * Resolves the correct extension for an image by trying each in order.
+ * Returns the first src that loads successfully.
+ */
+function resolveImageSrc(index: number): Promise<string> {
+  return new Promise((resolve) => {
+    let i = 0;
+    const tryNext = () => {
+      if (i >= EXTENSIONS.length) {
+        // All failed — resolve with empty string (slot stays invisible)
+        resolve("");
+        return;
+      }
+      const src = `/images/img${index}.${EXTENSIONS[i]}`;
+      const probe = new Image();
+      probe.onload = () => resolve(src);
+      probe.onerror = () => { i++; tryNext(); };
+      probe.src = src;
+    };
+    tryNext();
+  });
+}
+
+/**
+ * Full-screen looped image slideshow background.
+ * Automatically detects .jpg / .jpeg / .png / .webp per image —
+ * no manual configuration needed.
+ * (mobile-first, fullscreen, ~55% darkened, smooth cross-fade)
  */
 export function Atmosphere() {
+  const [srcs, setSrcs] = useState<string[]>(Array(TOTAL_IMAGES).fill(""));
+  const [current, setCurrent] = useState(0);
+  const [introPlayed, setIntroPlayed] = useState(false);
+  const resolved = useRef(false);
+
+  // Resolve all image srcs once on mount
+  useEffect(() => {
+    if (resolved.current) return;
+    resolved.current = true;
+    Promise.all(
+      Array.from({ length: TOTAL_IMAGES }, (_, i) => resolveImageSrc(i + 1))
+    ).then(setSrcs);
+  }, []);
+
+  // Advance slide every INTERVAL_MS ms; mark intro as played on first tick
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCurrent((prev) => {
+        if (prev === 0) setIntroPlayed(true);
+        return (prev + 1) % TOTAL_IMAGES;
+      });
+    }, INTERVAL_MS);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <div className="atmosphere" aria-hidden="true">
-      <GradientWaves
-        horizonColor="#141828"
-        waveColor="#2d3d5c"
-        crestColor="#6b82b0"
-        speed={0.35}
-        amplitude={2.8}
-        waveScale={0.6}
-        waveRatio={0.9}
-        swell={32}
-        turbulence={20}
-        tilt={1.11}
-        zoom={1.0}
-        height={5.5}
-        fogDepth={14}
-        detail="medium"
-        brightness={1.6}
-        opacity={1.0}
-        mouseInteraction={true}
-        parallaxStrength={0.4}
-        grain={true}
-        grainIntensity={0.03}
-      />
-      {/* Vignette overlay — keeps text readable without hiding the waves */}
+      {srcs.map((src, i) =>
+        src ? (
+          <img
+            key={i}
+            src={src}
+            alt=""
+            className={[
+            "atmosphere-slide",
+            i === current ? "atmosphere-slide--active" : "",
+            i === 0 && !introPlayed ? "atmosphere-slide--intro" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+            draggable={false}
+          />
+        ) : null
+      )}
+      {/* Dark overlay — keeps countdown text legible */}
       <div className="atmosphere-vignette" />
     </div>
   );

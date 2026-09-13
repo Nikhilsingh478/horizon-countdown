@@ -3,8 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Atmosphere } from "@/components/background/Atmosphere";
 import { Countdown } from "@/components/countdown/Countdown";
 import { DEADLINE_LABEL } from "@/utils/countdown";
+import { useAudio } from "@/hooks/useAudio";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/")(  {
   head: () => ({
     meta: [
       { title: "Day 052 — October 10, 2026" },
@@ -26,6 +27,10 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  // Plays Dandelions.mp3 at 70% volume, looped.
+  // Double-click / double-tap anywhere toggles mute.
+  useAudio("/Dandelions.mp3", 0.7);
+
   return (
     <>
       <Atmosphere />
@@ -39,3 +44,4 @@ function Index() {
     </>
   );
 }
+

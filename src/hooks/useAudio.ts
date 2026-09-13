@@ -12,7 +12,7 @@ import { useEffect, useRef } from "react";
  * event handler.
  */
 export function useAudio(src: string, volume = 0.7) {
-  // Tracks our INTENT — are we supposed to be playing right now?
+  // Tracks our INTENT - are we supposed to be playing right now?
   // Set synchronously so dblclick always reads the correct value.
   const shouldPlayRef = useRef(false);
 
@@ -25,7 +25,7 @@ export function useAudio(src: string, volume = 0.7) {
     const play = () => {
       shouldPlayRef.current = true;
       audio.play().catch(() => {
-        // Autoplay blocked — reset so first dblclick starts it correctly
+        // Autoplay blocked - reset so first dblclick starts it correctly
         shouldPlayRef.current = false;
       });
     };
@@ -46,17 +46,17 @@ export function useAudio(src: string, volume = 0.7) {
     // Attempt immediate autoplay
     play();
 
-    // -- Desktop: dblclick toggles play / pause ----------------------------
+    // Desktop: dblclick toggles play / pause
     const handleDblClick = () => toggle();
 
-    // -- Mobile: two taps within 300 ms toggles play / pause ---------------
+    // Mobile: two taps within 300 ms toggles play / pause
     let lastTap = 0;
     const handleTouchEnd = () => {
       const now = Date.now();
       const gap = now - lastTap;
       if (gap < 300 && gap > 0) {
         toggle();
-        lastTap = 0; // reset so triple-tap does not re-toggle immediately
+        lastTap = 0;
       } else {
         lastTap = now;
       }

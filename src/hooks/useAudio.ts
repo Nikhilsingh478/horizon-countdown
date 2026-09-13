@@ -1,94 +1,75 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Plays a looping background audio track and wires global play/pause gestures.
+ * Plays a looping background audio track.
  *
- * Behaviour:
- *  - Auto-plays at `volume` (0-1) on mount; falls back to first user interaction
- *    if the browser blocks autoplay.
- *  - Double-click  (desktop)  -> toggle play / pause.
- *  - Double-tap    (mobile)   -> toggle play / pause (two taps <= 300 ms apart).
+ * - Auto-plays at `volume` on mount (falls back silently if browser blocks it).
+ * - Double-click  (desktop) -> toggle play / pause.
+ * - Double-tap    (mobile)  -> toggle play / pause (two taps within 300 ms).
  *
- * All listeners are attached to `document` so z-index stacking never matters.
+ * Uses a synchronous `shouldPlayRef` flag as the source of truth so there is
+ * zero race condition between the async Audio.play() promise and the dblclick
+ * event handler.
  */
 export function useAudio(src: string, volume = 0.7) {
-  const audioRef   = useRef<HTMLAudioElement | null>(null);
-  const startedRef = useRef(false);
-  const lastTapRef = useRef<number>(0);
+  // Tracks our INTENT — are we supposed to be playing right now?
+  // Set synchronously so dblclick always reads the correct value.
+  const shouldPlayRef = useRef(false);
 
   useEffect(() => {
     const audio = new Audio(src);
     audio.loop    = true;
     audio.volume  = volume;
     audio.preload = "auto";
-    audioRef.current = audio;
 
-    /** Start playback (idempotent - won't restart if already playing). */
-    const start = () => {
-      if (startedRef.current) return Promise.resolve();
-      return audio.play().then(() => {
-        startedRef.current = true;
-      }).catch(() => {});
+    const play = () => {
+      shouldPlayRef.current = true;
+      audio.play().catch(() => {
+        // Autoplay blocked — reset so first dblclick starts it correctly
+        shouldPlayRef.current = false;
+      });
+    };
+
+    const pause = () => {
+      shouldPlayRef.current = false;
+      audio.pause();
+    };
+
+    const toggle = () => {
+      if (shouldPlayRef.current) {
+        pause();
+      } else {
+        play();
+      }
     };
 
     // Attempt immediate autoplay
-    start();
+    play();
 
-    // Double-click: toggle play / pause
-    const handleDblClick = () => {
-      if (!startedRef.current) {
-        // First ever gesture - just start the track
-        start();
-        return;
-      }
-      if (audio.paused) {
-        audio.play().catch(() => {});
-      } else {
-        audio.pause();
-      }
-    };
+    // -- Desktop: dblclick toggles play / pause ----------------------------
+    const handleDblClick = () => toggle();
 
-    // Double-tap (touch): toggle play / pause
+    // -- Mobile: two taps within 300 ms toggles play / pause ---------------
+    let lastTap = 0;
     const handleTouchEnd = () => {
       const now = Date.now();
-      const gap = now - lastTapRef.current;
-
-      if (!startedRef.current) {
-        // First touch - start the track
-        start();
-        lastTapRef.current = now;
-        return;
-      }
-
+      const gap = now - lastTap;
       if (gap < 300 && gap > 0) {
-        // Second tap within window -> toggle
-        if (audio.paused) {
-          audio.play().catch(() => {});
-        } else {
-          audio.pause();
-        }
-        lastTapRef.current = 0; // reset so a 3rd tap does not re-toggle
+        toggle();
+        lastTap = 0; // reset so triple-tap does not re-toggle immediately
       } else {
-        lastTapRef.current = now;
+        lastTap = now;
       }
     };
 
-    // Fallback: any first interaction starts audio
-    const handleFirstInteraction = () => start();
-
     document.addEventListener("dblclick", handleDblClick);
-    document.addEventListener("touchend", handleTouchEnd);
-    document.addEventListener("click",    handleFirstInteraction, { once: true });
-    document.addEventListener("keydown",  handleFirstInteraction, { once: true });
+    document.addEventListener("touchend",  handleTouchEnd);
 
     return () => {
       audio.pause();
       audio.src = "";
-      audioRef.current = null;
       document.removeEventListener("dblclick", handleDblClick);
-      document.removeEventListener("touchend", handleTouchEnd);
-      document.removeEventListener("click",    handleFirstInteraction);
-      document.removeEventListener("keydown",  handleFirstInteraction);
+      document.removeEventListener("touchend",  handleTouchEnd);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src]);

@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")(  {
 
 function Index() {
   // Plays Dandelions.mp3 at 70% volume, looped.
-  // Double-click / double-tap anywhere toggles mute.
+  // Clicking anywhere on the website toggles play / pause.
   useAudio("/Dandelions.mp3", 0.7);
 
   return (

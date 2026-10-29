@@ -16,6 +16,7 @@ export function Countdown() {
       aria-live="off"
       aria-atomic="true"
       aria-label={label}
+      suppressHydrationWarning
     >
       <div className="countdown-row" aria-hidden="true">
         <CountdownUnit

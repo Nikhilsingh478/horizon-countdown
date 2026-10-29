@@ -40,16 +40,16 @@ export function FlipNumber({ value, reducedMotion }: Props) {
   const isFlipping = previous !== null;
 
   return (
-    <span className="flip-card">
+    <span className="flip-card" suppressHydrationWarning>
       {/* In-flow sizer — locks the card's width/height */}
-      <span className="flip-sizer" aria-hidden="true">
+      <span className="flip-sizer" aria-hidden="true" suppressHydrationWarning>
         {current}
       </span>
 
       {/* Resting state: just show the current value */}
       {!isFlipping && (
-        <span className="flip-face flip-face--idle">
-          <span className="flip-digit">{current}</span>
+        <span className="flip-face flip-face--idle" suppressHydrationWarning>
+          <span className="flip-digit" suppressHydrationWarning>{current}</span>
         </span>
       )}
 

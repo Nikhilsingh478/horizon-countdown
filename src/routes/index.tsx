@@ -40,7 +40,7 @@ function Index() {
       <Atmosphere />
       <main className="screen">
         <header className="masthead">
-          <h1 className="masthead-eyebrow">{dayDisplay}</h1>
+          <h1 className="masthead-eyebrow" suppressHydrationWarning>{dayDisplay}</h1>
           <p className="masthead-date">{START_DATE_LABEL}</p>
         </header>
         <Countdown />

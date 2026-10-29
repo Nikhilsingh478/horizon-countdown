@@ -303,7 +303,7 @@ body {
 }
 
 /* ----------------------------------------------------------------
-   Countdown row — ALL FOUR units on ONE horizontal line always.
+   Countdown row — ALL FIVE units on ONE horizontal line always.
    flex-nowrap enforced. Shrinks gracefully on narrow screens via
    clamp() values on font-size and gap.
    ---------------------------------------------------------------- */
@@ -314,13 +314,13 @@ body {
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: center;
-  gap: clamp(0.85rem, 2.8vw, 2.25rem);
+  gap: clamp(0.6rem, 2vw, 1.85rem);
   width: 100%;
 }
 
 /* ----------------------------------------------------------------
    Individual countdown unit (number + label stacked)
-   Stagger slots 3-6: each unit fans in with a 60ms offset.
+   Stagger slots 3-7: each unit fans in with an offset.
    ---------------------------------------------------------------- */
 
 .unit {
@@ -333,18 +333,20 @@ body {
   animation: fade-up 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Days — slot 3 */
+/* Years — slot 3 */
 .unit:nth-child(1) { animation-delay: 360ms; }
-/* Hours — slot 4 (skip divider at index 2) */
-.unit:nth-child(3) { animation-delay: 450ms; }
-/* Minutes — slot 5 */
-.unit:nth-child(5) { animation-delay: 540ms; }
-/* Seconds — slot 6 */
-.unit:nth-child(7) { animation-delay: 630ms; }
+/* Months — slot 4 (skip divider at index 2) */
+.unit:nth-child(3) { animation-delay: 430ms; }
+/* Days — slot 5 (skip divider at index 4) */
+.unit:nth-child(5) { animation-delay: 500ms; }
+/* Hours — slot 6 (skip divider at index 6) */
+.unit:nth-child(7) { animation-delay: 570ms; }
+/* Minutes — slot 7 (skip divider at index 8) */
+.unit:nth-child(9) { animation-delay: 640ms; }
 
 .unit-label {
   font-family: "Manrope", system-ui, sans-serif;
-  font-size: clamp(0.5rem, 1.15vw, 0.65rem);
+  font-size: clamp(0.48rem, 1.1vw, 0.65rem);
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -357,18 +359,19 @@ body {
   align-self: center;
   padding-bottom: 1.5rem; /* visually centres with the number */
   font-family: "Manrope", system-ui, sans-serif;
-  font-size: clamp(1.2rem, 3.2vw, 2.25rem);
+  font-size: clamp(1.1rem, 2.8vw, 2.1rem);
   font-weight: 200;
-  color: rgba(120, 124, 135, 0.22);
+  color: rgba(120, 124, 135, 0.28);
   flex-shrink: 0;
   line-height: 1;
   /* Dividers fade in slightly after their preceding unit */
   animation: fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.unit-divider:nth-child(2) { animation-delay: 400ms; }
-.unit-divider:nth-child(4) { animation-delay: 495ms; }
-.unit-divider:nth-child(6) { animation-delay: 585ms; }
+.unit-divider:nth-child(2) { animation-delay: 395ms; }
+.unit-divider:nth-child(4) { animation-delay: 465ms; }
+.unit-divider:nth-child(6) { animation-delay: 535ms; }
+.unit-divider:nth-child(8) { animation-delay: 605ms; }
 
 /* ----------------------------------------------------------------
    Reduced motion — collapse all entrance animations immediately
@@ -590,13 +593,13 @@ body {
 }
 
 /* ----------------------------------------------------------------
-   MOBILE — keep all 4 units on ONE row at ≤ 480px
-   Shrink numbers and gaps aggressively to fit 320px wide screens.
+   MOBILE — keep all 5 units on ONE row at ≤ 480px
+   Shrink numbers and gaps gracefully to fit 320px wide screens.
    ---------------------------------------------------------------- */
 
 @media (max-width: 480px) {
   .countdown-row {
-    gap: clamp(0.35rem, 2.5vw, 0.75rem);
+    gap: clamp(0.2rem, 1.4vw, 0.5rem);
   }
 
   .flip-digit,
@@ -605,17 +608,17 @@ body {
   .digit-static,
   .digit-out,
   .digit-in {
-    font-size: clamp(1.75rem, 11.5vw, 2.4rem);
+    font-size: clamp(1.35rem, 8.2vw, 1.95rem);
   }
 
   .unit-label {
-    font-size: clamp(0.42rem, 2vw, 0.58rem);
-    letter-spacing: 0.14em;
+    font-size: clamp(0.36rem, 1.7vw, 0.5rem);
+    letter-spacing: 0.12em;
   }
 
   .unit-divider {
-    font-size: clamp(0.9rem, 4vw, 1.3rem);
-    padding-bottom: 1rem;
+    font-size: clamp(0.75rem, 3.2vw, 1.1rem);
+    padding-bottom: 0.85rem;
   }
 
   .masthead-date {

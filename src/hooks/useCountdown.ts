@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 
-import { getRemaining, type Remaining } from "@/utils/countdown";
+import { getElapsed, type Elapsed } from "@/utils/countdown";
 
 /**
- * Always derives the remaining time from `deadline - Date.now()`.
- * Nothing is decremented, nothing is persisted, so there is no drift and
- * backgrounding / sleeping the device cannot desynchronise the display.
+ * Derives elapsed time from `Date.now() - START_DATE_MS`.
+ * Runs continuously, recalculates on second boundaries,
+ * and maintains exact synchronization without drift.
  */
-export function useCountdown(): Remaining {
-  const [remaining, setRemaining] = useState<Remaining>(() => getRemaining());
+export function useElapsed(): Elapsed {
+  const [elapsed, setElapsed] = useState<Elapsed>(() => getElapsed());
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     const tick = () => {
-      const next = getRemaining();
-      setRemaining(next);
-      if (next.done) return;
+      const next = getElapsed();
+      setElapsed(next);
       // Align each update to the next whole second boundary.
       timeout = setTimeout(tick, 1000 - (Date.now() % 1000));
     };
@@ -45,8 +44,11 @@ export function useCountdown(): Remaining {
     };
   }, []);
 
-  return remaining;
+  return elapsed;
 }
+
+// Backward compatibility alias
+export const useCountdown = useElapsed;
 
 export function useReducedMotion(): boolean {
   const [reduced, setReduced] = useState(false);

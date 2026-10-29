@@ -1,13 +1,13 @@
-import { useCountdown, useReducedMotion } from "@/hooks/useCountdown";
-import { DEADLINE_LABEL, pad } from "@/utils/countdown";
+import { useElapsed, useReducedMotion } from "@/hooks/useCountdown";
+import { START_DATE_LABEL, pad } from "@/utils/countdown";
 
 import { CountdownUnit } from "./CountdownUnit";
 
 export function Countdown() {
-  const { days, hours, minutes, seconds } = useCountdown();
+  const { years, months, days, hours, minutes, totalDays } = useElapsed();
   const reducedMotion = useReducedMotion();
 
-  const label = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds remaining until ${DEADLINE_LABEL}`;
+  const label = `${years} years, ${months} months, ${days} days, ${hours} hours, and ${minutes} minutes elapsed since ${START_DATE_LABEL} (${totalDays} total days)`;
 
   return (
     <section
@@ -18,6 +18,20 @@ export function Countdown() {
       aria-label={label}
     >
       <div className="countdown-row" aria-hidden="true">
+        <CountdownUnit
+          value={pad(years)}
+          label="Years"
+          variant="flip"
+          reducedMotion={reducedMotion}
+        />
+        <span className="unit-divider">:</span>
+        <CountdownUnit
+          value={pad(months)}
+          label="Months"
+          variant="flip"
+          reducedMotion={reducedMotion}
+        />
+        <span className="unit-divider">:</span>
         <CountdownUnit
           value={pad(days)}
           label="Days"
@@ -36,13 +50,6 @@ export function Countdown() {
           value={pad(minutes)}
           label="Minutes"
           variant="flip"
-          reducedMotion={reducedMotion}
-        />
-        <span className="unit-divider">:</span>
-        <CountdownUnit
-          value={pad(seconds)}
-          label="Seconds"
-          variant="roll"
           reducedMotion={reducedMotion}
         />
       </div>
